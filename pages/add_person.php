@@ -60,9 +60,32 @@
     <div class="form-group">
       <label for="exampleInputEmail1">Status</label>
       <select name="data[status]" class="custom-select">
+        <option value="pos">Positive</option>
         <option value="pum">PUM (Person Under Monitoring)</option>
         <option value="pui">PUI (Person Under Investigation)</option>
         <option value="recovered">Recovered</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <?php 
+        $barangays = $DB->query( "SELECT * FROM barangays" );
+      ?>
+      <label for="exampleInputEmail1">Barangay</label>
+      <select name="data[brgy_id]" class="custom-select">
+        <?php while( $barangay = $barangays->fetch_object() ) : ?>
+        <option value="<?php echo $barangay->id ?>"><?php echo $barangay->name ?></option>
+        <?php endwhile;?> 
+      </select>
+    </div>
+    <div class="form-group">
+      <?php
+        $hospitals = $DB->query( "SELECT * FROM hospitals" );
+      ?>
+      <label for="exampleInputEmail1">Hospital Checked</label>
+      <select name="data[hospital_id]" class="custom-select">
+        <?php while( $hospital = $hospitals->fetch_object() ) : ?>
+        <option value="<?php echo $hospital->id ?>"><?php echo $hospital->name ?></option>
+        <?php endwhile; ?>        
       </select>
     </div>
     

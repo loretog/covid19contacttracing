@@ -39,12 +39,12 @@
 
   <?php 
 
-    $search = isset( $_GET[ 's' ] ) && !empty( $_GET[ 's' ] ) ? 'WHERE CONCAT( p.firstname, " ", p.middlename, " ", p.lastname ) LIKE "%' . clean( $_GET[ 's' ] ) . '%"': '';
+    $search = isset( $_GET[ 's' ] ) && !empty( $_GET[ 's' ] ) ? 'WHERE CONCAT( P.firstname, " ", P.middlename, " ", P.lastname ) LIKE "%' . clean( $_GET[ 's' ] ) . '%"': '';
 
     /* PAGINATION */
     $p = isset( $_GET[ 'p' ] ) ? clean( $_GET[ 'p' ] ) : 1;
     $total_page = 20;
-    $start_limit = ( $p - 1 ) * $total_page;    
+    $start_limit = ( $p - 1 ) * $total_page;   
     $max = $DB->query( "SELECT COUNT(*) FROM persons AS p $search" ); 
     $max = $max->fetch_array();
     $max_page = ceil( $max[0] / $total_page );
@@ -53,7 +53,7 @@
     var_dump($p >= $max_page);*/
     /* END of PAGINATION */    
 
-    $q = "SELECT id, firstname, middlename, lastname, status, extension, (SELECT COUNT(*) FROM contact_traces AS CT WHERE CT.contacted_person_id=P.id) AS contacted, ( SELECT contacted_person_id FROM contact_traces WHERE person_id = P.id LIMIT 1 ) AS contacted_person_id, ( SELECT CONCAT( firstname, ' ', middlename, ' ', lastname ) FROM persons WHERE id = contacted_person_id ) AS contacted_person_name FROM persons AS P $search LIMIT $start_limit, $total_page";
+    $q = "SELECT id, firstname, middlename, lastname, status, extension, (SELECT COUNT(*) FROM contact_traces AS CT WHERE CT.contacted_person_id=P.id) AS contacted, ( SELECT contacted_person_id FROM contact_traces WHERE person_id = P.id LIMIT 1 ) AS contacted_person_id, ( SELECT CONCAT( firstname, ' ', middlename, ' ', lastname ) FROM persons WHERE id = contacted_person_id ) AS contacted_person_name, (SELECT name FROM barangays WHERE id=P.brgy_id) AS brgy, (SELECT short_name FROM hospitals WHERE id=P.hospital_id) AS hospital FROM persons AS P $search LIMIT $start_limit, $total_page";
 
     $accounts = $DB->query( $q );
     $num = 1 + ( ( $p - 1 ) * $total_page );
@@ -63,6 +63,7 @@
       <tr>
         <th>#</th>
         <th>Name</th>
+        <th>Checked<br>At</th>
         <th>Contacted<br>By</th>
         <th>Contacted<br>People</th>
         <th>Status</th>
@@ -74,7 +75,10 @@
       <?php while( $account = $accounts->fetch_object() ) : ?>
       <tr>
         <td><?php echo $num ?></td>
-        <td><span style="text-transform: capitalize;"><?php echo $account->firstname . ' ' . $account->middlename . ' ' . $account->lastname ?></span> <?php echo ( isset( $account->extension ) && !empty( $account->extension ) ? "({$account->extension})" : '' ) ?></td>
+        <td><span style="text-transform: capitalize;"><?php echo $account->firstname . ' ' . $account->middlename . ' ' . $account->lastname ?></span> <?php echo ( isset( $account->extension ) && !empty( $account->extension ) ? "({$account->extension})" : '' ) ?> - <?php echo $account->brgy ?></td>
+        <td>
+          <?php echo $account->hospital ?>
+        </td>
         <td>
           <?php if( $account->contacted_person_id ) : ?>
           <a style="font-size: 12px;" class="btn btn-danger btn-sm" href="<?php echo SITE_URL ?>/?page=contacted&person_id=<?php echo $account->contacted_person_id ?>" title="Contacted by <?php echo $account->contacted_person_name ?>">

@@ -55,6 +55,29 @@
         <option value="rcvrd" <?php echo $account->status == 'recovered' ? 'selected' : '' ?>>Recovered</option>
       </select>
     </div>
+
+    <div class="form-group">
+      <?php 
+        $barangays = $DB->query( "SELECT * FROM barangays" );
+      ?>
+      <label for="exampleInputEmail1">Barangay</label>
+      <select name="data[brgy_id]" class="custom-select">
+        <?php while( $barangay = $barangays->fetch_object() ) : ?>
+        <option <?php echo ( $barangay->id == $account->brgy_id ? 'selected' : '' ); ?> value="<?php echo $barangay->id ?>"><?php echo $barangay->name ?></option>
+        <?php endwhile;?> 
+      </select>
+    </div>
+    <div class="form-group">
+      <?php
+        $hospitals = $DB->query( "SELECT * FROM hospitals" );
+      ?>
+      <label for="exampleInputEmail1">Hospital Checked</label>
+      <select name="data[hospital_id]" class="custom-select">
+        <?php while( $hospital = $hospitals->fetch_object() ) : ?>
+        <option <?php echo ( $hospital->id == $account->hospital_id ? 'selected' : '' ); ?> value="<?php echo $hospital->id ?>"><?php echo $hospital->name ?></option>
+        <?php endwhile; ?>        
+      </select>
+    </div>
     
     <button type="submit" class="btn btn-success btn-sm" title="Save Person">
       <svg class="bi bi-person-check" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
