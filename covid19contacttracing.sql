@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2020 at 03:31 AM
+-- Generation Time: Apr 08, 2020 at 04:33 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.9
 
@@ -49,11 +49,19 @@ INSERT INTO `admins` (`id`, `username`, `password`, `usertype`) VALUES
 --
 
 CREATE TABLE `barangays` (
-  `id` int(11) NOT NULL,
-  `municipality_id` int(11) NOT NULL,
+  `id` bigint(11) NOT NULL,
+  `municipality_id` int(11) DEFAULT NULL,
   `district_id` int(11) DEFAULT NULL,
-  `name` int(11) NOT NULL
+  `name` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `barangays`
+--
+
+INSERT INTO `barangays` (`id`, `municipality_id`, `district_id`, `name`) VALUES
+(1, 1, 1, 'san isidro'),
+(2, 1, 1, 'Ticud');
 
 -- --------------------------------------------------------
 
@@ -98,7 +106,9 @@ CREATE TABLE `hospitals` (
 --
 
 INSERT INTO `hospitals` (`id`, `name`, `short_name`) VALUES
-(1, 'Western Visayas Medical Center', 'WVMC');
+(1, 'Western Visayas Medical Center', 'WVMC'),
+(2, 'Doctors Hospital Iloilo', 'DHI'),
+(3, 'Mission Hostpital Iloilo', 'MHI');
 
 -- --------------------------------------------------------
 
@@ -122,9 +132,9 @@ CREATE TABLE `persons` (
 --
 
 INSERT INTO `persons` (`id`, `brgy_id`, `firstname`, `middlename`, `lastname`, `extension`, `status`, `hospital_id`) VALUES
-(1, 0, 'loreto', 'g', 'gabawa', 'jr', 'rcvrd', NULL),
-(2, 0, 'brandon', 'G', 'Lee', '', 'pui', NULL),
-(3, 0, 'loreto', '22', 'Gab', '', 'pum', NULL),
+(1, 2, 'loreto', 'g', 'gabawa', 'jr', 'pum', 2),
+(2, 1, 'brandon', 'G', 'Lee', '', 'pui', 2),
+(3, 1, 'loreto', '22', 'Gab', '', 'pum', 3),
 (4, 0, 'loreto', 'gabitanan', 'gabawa', '', 'pui', NULL),
 (5, 0, 'loreto', 'gabitanan', 'gabawa', '', 'pum', NULL),
 (6, 0, 'loreto', 'gabitanan', 'gabawa', '', 'pum', NULL),
@@ -152,7 +162,8 @@ INSERT INTO `persons` (`id`, `brgy_id`, `firstname`, `middlename`, `lastname`, `
 (28, 0, 'n', 'n', 'n', 'n', 'pum', NULL),
 (29, 0, 'cindy', 'm', 'guevarra', '', 'pum', NULL),
 (30, 0, 'berky', 'm', 'ado', '', 'pum', NULL),
-(31, 0, 'test', 'test', 'test', '', 'pum', NULL);
+(31, 0, 'test', 'test', 'test', '', 'pum', NULL),
+(32, 2, 'lee', 'lee', 'lee', '', 'pui', 2);
 
 --
 -- Indexes for dumped tables
@@ -162,6 +173,12 @@ INSERT INTO `persons` (`id`, `brgy_id`, `firstname`, `middlename`, `lastname`, `
 -- Indexes for table `admins`
 --
 ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `barangays`
+--
+ALTER TABLE `barangays`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -193,6 +210,12 @@ ALTER TABLE `admins`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `barangays`
+--
+ALTER TABLE `barangays`
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `contact_traces`
 --
 ALTER TABLE `contact_traces`
@@ -202,13 +225,13 @@ ALTER TABLE `contact_traces`
 -- AUTO_INCREMENT for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `persons`
 --
 ALTER TABLE `persons`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
